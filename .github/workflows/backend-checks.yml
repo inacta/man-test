@@ -1,21 +1,6 @@
 name: Backend Checks
 
 on:
-  pull_request:
-    paths:
-      - # Scripts, GitHub actions that contain 'backend' in their path.
-        '**/*backend*'
-      - # The backend source code
-        'src/backend/**'
-      - 'src/shared/**'
-      - # Rust files such as Cargo.lock, Cargo.toml and rust-toolchain.toml
-        '**/Cargo*'
-      - '**/*rust*'
-      - # The dockerfile used in this CI run, and the scripts it COPY's.
-        'Dockerfile'
-      - 'docker/**'
-      - # There may be some files in frontend folder that contains 'backend' in their name.
-        '!src/frontend/**'
   merge_group:
   workflow_dispatch:
 
