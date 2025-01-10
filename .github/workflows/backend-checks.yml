@@ -1,0 +1,52 @@
+name: Backend Checks
+
+on:
+  pull_request:
+    paths:
+      - # Scripts, GitHub actions that contain 'backend' in their path.
+        '**/*backend*'
+      - # The backend source code
+        'src/backend/**'
+      - 'src/shared/**'
+      - # Rust files such as Cargo.lock, Cargo.toml and rust-toolchain.toml
+        '**/Cargo*'
+      - '**/*rust*'
+      - # The dockerfile used in this CI run, and the scripts it COPY's.
+        'Dockerfile'
+      - 'docker/**'
+      - # There may be some files in frontend folder that contains 'backend' in their name.
+        '!src/frontend/**'
+  # test for merge queue
+  merge_group:
+  workflow_dispatch:
+
+jobs:
+
+  lint:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-backend-tests-${{ hashFiles('Cargo.lock', 'rust-toolchain.toml') }}
+      - name: Lint
+        run: ./scripts/lint.rust.sh
+
+  workspace-dependencies:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo snap install yq
+      - name: Dependencies are defined in the workspace
+        run: ./scripts/lint.cargo-workspace-dependencies.sh
+
+  may-merge:
+    needs: [ 'lint', 'workspace-dependencies' ]
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Cleared for merging
+        run: echo OK
