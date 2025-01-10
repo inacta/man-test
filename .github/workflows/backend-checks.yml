@@ -16,6 +16,7 @@ on:
       - 'docker/**'
       - # There may be some files in frontend folder that contains 'backend' in their name.
         '!src/frontend/**'
+  # test for merge queue
   merge_group:
   workflow_dispatch:
 
