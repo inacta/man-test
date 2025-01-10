@@ -1,6 +1,7 @@
 name: Binding Checks
 
 on:
+#Test
   merge_group:
   workflow_dispatch:
 
